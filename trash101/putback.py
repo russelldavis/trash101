@@ -3,8 +3,7 @@ import os
 import sys
 from pathlib import Path
 from xattr import getxattr, removexattr
-
-ORIG_PATH_XATTR = "trash101_orig_path"
+from . import ORIG_PATH_XATTR
 
 def main():
     if len(sys.argv) <= 1:

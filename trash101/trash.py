@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 from time import strftime
 from xattr import setxattr
+from . import ORIG_PATH_XATTR
 
 def main():
     if len(sys.argv) <= 1:
@@ -35,7 +36,7 @@ def main():
 
         # Resolve symlinks in the directory but not the file itself
         orig_path = path.parent.resolve() / path.name
-        setxattr(trash_path, "trash101_orig_path", os.fsencode(orig_path), symlink=True)
+        setxattr(trash_path, ORIG_PATH_XATTR, os.fsencode(orig_path), symlink=True)
         # subprocess.check_call(["xattr", "-w", "-s", "trash101_orig_path", orig_path, trash_path])
 
     sys.exit(exitcode)
