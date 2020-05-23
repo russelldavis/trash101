@@ -11,6 +11,7 @@ putback = "trash101.putback:main"
 [tool.poetry.dependencies]
 python = "^3.5"
 xattr = "^0.9.7"
+ds_store = "^1.1.2"
 
 [tool.poetry.dev-dependencies]
 

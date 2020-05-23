@@ -1,5 +1,13 @@
 [[package]]
 category = "main"
+description = "biplist is a library for reading/writing binary plists."
+name = "biplist"
+optional = false
+python-versions = "*"
+version = "1.0.3"
+
+[[package]]
+category = "main"
 description = "Foreign Function Interface for Python calling C code."
 name = "cffi"
 optional = false
@@ -8,6 +16,26 @@ version = "1.14.0"
 
 [package.dependencies]
 pycparser = "*"
+
+[[package]]
+category = "main"
+description = "Manipulate Finder .DS_Store files from Python"
+name = "ds-store"
+optional = false
+python-versions = "*"
+version = "1.1.2"
+
+[package.dependencies]
+biplist = ">=0.6"
+mac_alias = ">=2.0.1"
+
+[[package]]
+category = "main"
+description = "Generate/parse Mac OS Alias records from Python"
+name = "mac-alias"
+optional = false
+python-versions = "*"
+version = "2.0.7"
 
 [[package]]
 category = "main"
@@ -29,10 +57,13 @@ version = "0.9.7"
 cffi = ">=1.0.0"
 
 [metadata]
-content-hash = "6ac6d437fc16dc0bea9417a9278dd1529dab195695b35c6857ec520245097e76"
+content-hash = "fc9e15989c75ce7c99c838e5b7f30edcee9132abeba6e700d156183cdc37261a"
 python-versions = "^3.5"
 
 [metadata.files]
+biplist = [
+    {file = "biplist-1.0.3.tar.gz", hash = "sha256:4c0549764c5fe50b28042ec21aa2e14fe1a2224e239a1dae77d9e7f3932aa4c6"},
+]
 cffi = [
     {file = "cffi-1.14.0-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:1cae98a7054b5c9391eb3249b86e0e99ab1e02bb0cc0575da191aedadbdf4384"},
     {file = "cffi-1.14.0-cp27-cp27m-manylinux1_i686.whl", hash = "sha256:cf16e3cf6c0a5fdd9bc10c21687e19d29ad1fe863372b5543deaec1039581a30"},
@@ -62,6 +93,12 @@ cffi = [
     {file = "cffi-1.14.0-cp38-cp38-win32.whl", hash = "sha256:675686925a9fb403edba0114db74e741d8181683dcf216be697d208857e04ca8"},
     {file = "cffi-1.14.0-cp38-cp38-win_amd64.whl", hash = "sha256:00789914be39dffba161cfc5be31b55775de5ba2235fe49aa28c148236c4e06b"},
     {file = "cffi-1.14.0.tar.gz", hash = "sha256:2d384f4a127a15ba701207f7639d94106693b6cd64173d6c8988e2c25f3ac2b6"},
+]
+ds-store = [
+    {file = "ds_store-1.1.2.tar.gz", hash = "sha256:f569659cfd66b21273c5a2405d5e1e0f54fddebf627130329f01404f271a074c"},
+]
+mac-alias = [
+    {file = "mac_alias-2.0.7.tar.gz", hash = "sha256:c485e3eb9d600208cc0aa906282f0d575a535395306289bcdb4096599189e223"},
 ]
 pycparser = [
     {file = "pycparser-2.20-py2.py3-none-any.whl", hash = "sha256:7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705"},
