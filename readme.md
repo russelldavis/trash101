@@ -25,6 +25,19 @@ Via [pipx](https://github.com/pipxproject/pipx):
     putback ~/.Trash/file.ext
 
 
+## FAQ
+**Does the `putback` command work with files that were trashed via Finder?**
+
+It doesn't. The only way to do that is via applescript, which is slow and doesn't
+work well with sudo. I experimented with implementing it by mimicking what Finder
+does internally (getting the original location from the trash's .DS_Store file),
+but that is problematic as well, because Finder takes a while before flushing
+changes to that file, making it impossible to get the data for recently trashed
+files.
+
+For the same reason, attempting to write put-back data to the .DS_Store file
+(in the `trash` command) would be problematic.
+
 
 ## Similar tools
 - https://github.com/sindresorhus/trash-cli
