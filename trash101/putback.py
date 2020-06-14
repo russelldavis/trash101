@@ -3,13 +3,14 @@ import os
 import sys
 from pathlib import Path
 from xattr import getxattr, removexattr
-from . import ORIG_PATH_XATTR
+from . import ORIG_PATH_XATTR, eprint
 
 def main():
     if len(sys.argv) <= 1:
-        sys.stderr.write(
+        eprint(
             f'usage: {os.path.basename(sys.argv[0])} file ...\n'
-            '       put back file(s) from Trash\n')
+            f'       put back file(s) from Trash'
+        )
         sys.exit(64) # what rm does with no args
 
     exitcode = 0
@@ -21,26 +22,36 @@ def main():
         except IOError:
             # getxattr doesn't distinguish failure modes
             if trash_path.exists():
-                sys.stderr.write(f"{trash_path}: could not restore: original path not available\n")
+                eprint(
+                    f"{trash_path}: trashed file does not contain original path "
+                    f"metadata; not restoring"
+                )
             else:
-                sys.stderr.write(f"{trash_path}: No such file or directory\n")
+                eprint(f"{trash_path}: No such file or directory")
             exitcode = 1
             continue
 
-        orig_path = os.fsdecode(orig_path)
+        orig_path = Path(os.fsdecode(orig_path))
+        orig_file = None
         try:
-            orig_file = open(orig_path, "x")
+            if trash_path.is_dir():
+                orig_path.mkdir()
+            else:
+                orig_file = orig_path.open("x")
         except FileExistsError:
-            sys.stderr.write(f"overwrite {orig_path}? (y/n [n])\n")
-            res = input()
-            if res[0] != "y":
-                sys.stderr.write(f"not overwritten")
+            if orig_path.is_dir():
+                eprint(f"{orig_path}: already exists as a dir; not restoring")
                 exitcode = 1
                 continue
-            orig_file = None
+            eprint(f"overwrite {orig_path}? (y/n [n])")
+            res = input()
+            if res[0] != "y":
+                eprint("not overwritten")
+                exitcode = 1
+                continue
 
         trash_path.replace(orig_path)
-        sys.stderr.write(f"{orig_path}\n")
+        eprint(f"{orig_path}\n")
         removexattr(orig_path, ORIG_PATH_XATTR, symlink=True)
         if orig_file:
             orig_file.close()
