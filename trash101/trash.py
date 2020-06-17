@@ -22,7 +22,7 @@ def main():
 
         while True:
             try:
-                if path.is_dir():
+                if path.is_dir() and not path.is_symlink():
                     trash_path.mkdir()
                 else:
                     trash_file = trash_path.open("x")

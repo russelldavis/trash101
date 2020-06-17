@@ -34,12 +34,12 @@ def main():
         orig_path = Path(os.fsdecode(orig_path))
         orig_file = None
         try:
-            if trash_path.is_dir():
+            if trash_path.is_dir() and not trash_path.is_symlink():
                 orig_path.mkdir()
             else:
                 orig_file = orig_path.open("x")
         except FileExistsError:
-            if orig_path.is_dir():
+            if orig_path.is_dir() and not orig_path.is_symlink():
                 eprint(f"{orig_path}: already exists as a dir; not restoring")
                 exitcode = 1
                 continue
