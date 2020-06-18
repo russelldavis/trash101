@@ -37,10 +37,12 @@ def main():
         except FileNotFoundError:
             eprint(f"{path}: No such file or directory")
             if trash_file:
+                trash_file.close()
                 trash_path.unlink()
             else:
                 trash_path.rmdir()
             exitcode = 1
+            continue
 
         if trash_file:
             trash_file.close()
