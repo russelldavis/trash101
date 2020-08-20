@@ -49,12 +49,8 @@ def main():
 
         # Resolve symlinks in the directory but not the file itself
         orig_path = path.parent.resolve() / path.name
-        try:
-            setxattr(trash_path, ORIG_PATH_XATTR, os.fsencode(orig_path), symlink=True)
-            # subprocess.check_call(["xattr", "-w", "-s", "trash101_orig_path", orig_path, trash_path])
-        except OSError:
-            # Some filesystems don't support xattrs
-            pass
+        setxattr(trash_path, ORIG_PATH_XATTR, os.fsencode(orig_path), symlink=True)
+        # subprocess.check_call(["xattr", "-w", "-s", "trash101_orig_path", orig_path, trash_path])
 
     sys.exit(exitcode)
 
