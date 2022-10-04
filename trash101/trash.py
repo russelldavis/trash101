@@ -17,12 +17,12 @@ def main():
     exitcode = 0
     for arg in sys.argv[1:]:
         path = Path(arg)
-        trash_path = Path.home() / ".Trash" / path.name
-        trash_file = None
+        trashed_path = Path.home() / ".Trash" / path.name
+        trashed_file = None
         # Resolve symlinks in the directory but not the file itself
         resolved_path = path.parent.resolve() / path.name
 
-        if resolved_path.as_posix().startswith(trash_path.parent.as_posix() + "/"):
+        if resolved_path.as_posix().startswith(trashed_path.parent.as_posix() + "/"):
             eprint(f"{path}: Already in trash")
             exitcode = 1
             continue
@@ -31,27 +31,27 @@ def main():
             # It should still exist if there was an error, but to be safe,
             # don't remove what's in the trash if the source isn't still there.
             if path.exists():
-                if trash_file:
-                    trash_file.close()
-                    trash_path.unlink()
+                if trashed_file:
+                    trashed_file.close()
+                    trashed_path.unlink()
                 else:
-                    trash_path.rmdir()
+                    trashed_path.rmdir()
             exitcode = 1
 
         while True:
             try:
                 if path.is_dir() and not path.is_symlink():
-                    trash_path.mkdir()
+                    trashed_path.mkdir()
                 else:
-                    trash_file = trash_path.open("x")
+                    trashed_file = trashed_path.open("x")
             except FileExistsError:
                 # almost same format as macOS uses, except this has zero-padding on the hour
-                trash_path = trash_path.with_name(trash_path.name + strftime(" %I.%M.%S %p"))
+                trashed_path = trashed_path.with_name(trashed_path.name + strftime(" %I.%M.%S %p"))
             else:
                 break
 
         try:
-            path.replace(trash_path)
+            path.replace(trashed_path)
         except FileNotFoundError:
             eprint(f"{path}: No such file or directory")
             on_error()
@@ -64,11 +64,11 @@ def main():
             on_error()
             raise
 
-        if trash_file:
-            trash_file.close()
+        if trashed_file:
+            trashed_file.close()
 
-        setxattr(trash_path, ORIG_PATH_XATTR, os.fsencode(resolved_path), symlink=True)
-        # subprocess.check_call(["xattr", "-w", "-s", "trash101_orig_path", orig_path, trash_path])
+        setxattr(trashed_path, ORIG_PATH_XATTR, os.fsencode(resolved_path), symlink=True)
+        # subprocess.check_call(["xattr", "-w", "-s", "trash101_orig_path", orig_path, trashed_path])
 
     sys.exit(exitcode)
 
