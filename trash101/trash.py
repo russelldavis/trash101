@@ -20,6 +20,17 @@ def main():
         trash_path = Path.home() / ".Trash" / path.name
         trash_file = None
 
+        def on_error():
+            # It should still exist if there was an error, but to be safe,
+            # don't remove what's in the trash if the source isn't still there.
+            if path.exists():
+                if trash_file:
+                    trash_file.close()
+                    trash_path.unlink()
+                else:
+                    trash_path.rmdir()
+            exitcode = 1
+
         while True:
             try:
                 if path.is_dir() and not path.is_symlink():
@@ -36,13 +47,15 @@ def main():
             path.replace(trash_path)
         except FileNotFoundError:
             eprint(f"{path}: No such file or directory")
-            if trash_file:
-                trash_file.close()
-                trash_path.unlink()
-            else:
-                trash_path.rmdir()
-            exitcode = 1
+            on_error()
             continue
+        except PermissionError as err:
+            eprint(err)
+            on_error()
+            continue
+        except Exception:
+            on_error()
+            raise
 
         if trash_file:
             trash_file.close()
