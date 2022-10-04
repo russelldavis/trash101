@@ -19,6 +19,13 @@ def main():
         path = Path(arg)
         trash_path = Path.home() / ".Trash" / path.name
         trash_file = None
+        # Resolve symlinks in the directory but not the file itself
+        resolved_path = path.parent.resolve() / path.name
+
+        if resolved_path.as_posix().startswith(trash_path.parent.as_posix() + "/"):
+            eprint(f"{path}: Already in trash")
+            exitcode = 1
+            continue
 
         def on_error():
             # It should still exist if there was an error, but to be safe,
@@ -60,9 +67,7 @@ def main():
         if trash_file:
             trash_file.close()
 
-        # Resolve symlinks in the directory but not the file itself
-        orig_path = path.parent.resolve() / path.name
-        setxattr(trash_path, ORIG_PATH_XATTR, os.fsencode(orig_path), symlink=True)
+        setxattr(trash_path, ORIG_PATH_XATTR, os.fsencode(resolved_path), symlink=True)
         # subprocess.check_call(["xattr", "-w", "-s", "trash101_orig_path", orig_path, trash_path])
 
     sys.exit(exitcode)
