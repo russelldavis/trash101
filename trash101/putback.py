@@ -45,7 +45,7 @@ def main():
                 continue
             eprint(f"overwrite {orig_path}? (y/n [n])")
             res = input()
-            if res[0] != "y":
+            if res != "y" and res != "Y":
                 eprint("not overwritten")
                 exitcode = 1
                 continue
